@@ -4,7 +4,8 @@ import obstacle
 from alien import Alien, Extra
 from random import choice, randint
 from laser import Laser
- 
+import pygame_menu
+
 class Game:
 	def __init__(self):
 		# Player setup
@@ -196,29 +197,59 @@ class CRT:
 		self.create_crt_lines()
 		screen.blit(self.tv,(0,0))
 
+# Función para iniciar el juego
+def start_game():
+    pygame.mixer.Sound('../audio/music.wav').play(loops=-1)
+    game = Game()
+    ALIENLASER = pygame.USEREVENT + 1
+    pygame.time.set_timer(ALIENLASER, 800)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == ALIENLASER:
+                game.alien_shoot()
+
+        screen.fill((30, 30, 30))
+        game.run()
+        pygame.display.flip()
+        clock.tick(60)
+
+# Crear el menú
+def create_menu():
+    menu = pygame_menu.Menu("¡Bienvenido!", screen_width, screen_height, theme=pygame_menu.themes.THEME_BLUE)
+
+    menu.add.button("Iniciar juego", start_game)
+    menu.add.button("Salir", pygame_menu.events.EXIT)
+
+    return menu
+
+# ... (código actual)
+
 if __name__ == '__main__':
-	pygame.init()
-	screen_width = 600
-	screen_height = 600
-	screen = pygame.display.set_mode((screen_width,screen_height))
-	clock = pygame.time.Clock()
-	game = Game()
-	crt = CRT()
+    pygame.init()
+    screen_width = 600
+    screen_height = 600
+    screen = pygame.display.set_mode((screen_width, screen_height))
+    clock = pygame.time.Clock()
+    crt = CRT()
 
-	ALIENLASER = pygame.USEREVENT + 1
-	pygame.time.set_timer(ALIENLASER,800)
+    # Crear el menú
+    menu = create_menu()
 
-	while True:
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				pygame.quit()
-				sys.exit()
-			if event.type == ALIENLASER:
-				game.alien_shoot()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
-		screen.fill((30,30,30))
-		game.run()
-		#crt.draw()
-			
-		pygame.display.flip()
-		clock.tick(60)
+        screen.fill((30, 30, 30))
+        menu.update(pygame.event.get())
+        menu.draw(screen)
+        
+        # Agregamos el procesamiento del menú
+        menu.mainloop(screen, disable_loop=True)
+
+        pygame.display.flip()
+        clock.tick(60)
