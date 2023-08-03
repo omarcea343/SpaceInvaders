@@ -225,8 +225,6 @@ def create_menu():
 
     return menu
 
-# ... (código actual)
-
 if __name__ == '__main__':
     pygame.init()
     screen_width = 600
