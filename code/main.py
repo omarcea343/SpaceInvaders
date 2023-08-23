@@ -180,23 +180,6 @@ class Game:
 		self.display_score()
 		self.victory_message()
 
-class CRT:
-	def __init__(self):
-		self.tv = pygame.image.load('../graphics/tv.png').convert_alpha()
-		self.tv = pygame.transform.scale(self.tv,(screen_width,screen_height))
-
-	def create_crt_lines(self):
-		line_height = 3
-		line_amount = int(screen_height / line_height)
-		for line in range(line_amount):
-			y_pos = line * line_height
-			pygame.draw.line(self.tv,'black',(0,y_pos),(screen_width,y_pos),1)
-
-	def draw(self):
-		self.tv.set_alpha(randint(75,90))
-		self.create_crt_lines()
-		screen.blit(self.tv,(0,0))
-
 # Función para iniciar el juego
 def start_game():
     pygame.mixer.Sound('../audio/music.wav').play(loops=-1)
@@ -231,7 +214,6 @@ if __name__ == '__main__':
     screen_height = 600
     screen = pygame.display.set_mode((screen_width, screen_height))
     clock = pygame.time.Clock()
-    crt = CRT()
 
     # Crear el menú
     menu = create_menu()
