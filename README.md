@@ -1,11 +1,11 @@
 # SpaceInvaders
 
-##Requirements
+## Requirements
 
 - Pygame
 - Pygame_menu
 
-##Execution
+## Execution
 
 To execute run the following on the code directory:
 
