@@ -25,12 +25,12 @@ class Game:
 		self.blocks = pygame.sprite.Group()
 		self.obstacle_amount = 4
 		self.obstacle_x_positions = [num * (screen_width / self.obstacle_amount) for num in range(self.obstacle_amount)]
-		self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 15, y_start = 480)
+		self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 15, y_start = 600)
 
 		# Alien setup
 		self.aliens = pygame.sprite.Group()
 		self.alien_lasers = pygame.sprite.Group()
-		self.alien_setup(rows = 6, cols = 8)
+		self.alien_setup(rows = 8, cols = 10)
 		self.alien_direction = 1
 
 		# Extra setup
@@ -210,8 +210,8 @@ def create_menu():
 
 if __name__ == '__main__':
     pygame.init()
-    screen_width = 600
-    screen_height = 600
+    screen_width = 800
+    screen_height = 800
     screen = pygame.display.set_mode((screen_width, screen_height))
     clock = pygame.time.Clock()
 
