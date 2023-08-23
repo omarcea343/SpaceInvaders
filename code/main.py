@@ -218,10 +218,10 @@ def start_game():
 
 # Crear el menú
 def create_menu():
-    menu = pygame_menu.Menu("¡Bienvenido!", screen_width, screen_height, theme=pygame_menu.themes.THEME_BLUE)
+    menu = pygame_menu.Menu("Space Invaders", screen_width, screen_height, theme=pygame_menu.themes.THEME_DARK)
 
-    menu.add.button("Iniciar juego", start_game)
-    menu.add.button("Salir", pygame_menu.events.EXIT)
+    menu.add.button("Start", start_game)
+    menu.add.button("Exit", pygame_menu.events.EXIT)
 
     return menu
 
