@@ -14,7 +14,7 @@ class Game:
 
 		# health and score setup
 		self.lives = 3
-		self.live_surf = pygame.image.load('../graphics/player.png').convert_alpha()
+		self.live_surf = pygame.image.load('../graphics/heart.png').convert_alpha()
 		self.live_x_start_pos = screen_width - (self.live_surf.get_size()[0] * 2 + 20)
 		self.score = 0
 		self.font = pygame.font.Font('../font/Pixeled.ttf',20)
