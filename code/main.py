@@ -199,13 +199,36 @@ def start_game():
         pygame.display.flip()
         clock.tick(60)
 
-# Crear el menú
+class CreditsMenu(pygame_menu.Menu):
+    def __init__(self):
+        super().__init__("Credits", screen_width, screen_height, theme=pygame_menu.themes.THEME_DARK)
+        
+        self.add.label("Credits:", font_size=40, font_color=(255, 255, 255))
+        self.add.label("Omar", font_size=30, font_color=(255, 255, 255))
+        self.add.vertical_margin(50)
+        self.add.button("Back to Menu", self.back_to_menu)
+    
+    def back_to_menu(self):
+        self.disable()
+        menu.enable()
+
+def show_credits():
+    credits_menu = CreditsMenu()
+    menu.disable()
+    credits_menu.mainloop(screen)
+    menu.enable()
+
+menu = None  # Define la variable del menú global
+
 def create_menu():
+    global menu  # Indica que estás utilizando la variable global menu
+    
     menu = pygame_menu.Menu("Space Invaders", screen_width, screen_height, theme=pygame_menu.themes.THEME_DARK)
-
+    
     menu.add.button("Start", start_game)
+    menu.add.button("Credits", show_credits)
     menu.add.button("Exit", pygame_menu.events.EXIT)
-
+    
     return menu
 
 if __name__ == '__main__':
