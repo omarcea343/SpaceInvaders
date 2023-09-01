@@ -19,8 +19,7 @@ class Game:
 		self.score = 0
 		self.font = pygame.font.Font('../font/Pixeled.ttf',20)
 
-		# Obstacle setup
-		self.shape = obstacle.shape
+        # Obstacle setup
 		self.block_size = 6
 		self.blocks = pygame.sprite.Group()
 		self.obstacle_amount = 4
@@ -46,18 +45,13 @@ class Game:
 		self.explosion_sound = pygame.mixer.Sound('../audio/explosion.wav')
 		self.explosion_sound.set_volume(0.3)
 
-	def create_obstacle(self, x_start, y_start,offset_x):
-		for row_index, row in enumerate(self.shape):
-			for col_index,col in enumerate(row):
-				if col == 'x':
-					x = x_start + col_index * self.block_size + offset_x
-					y = y_start + row_index * self.block_size
-					block = obstacle.Block(self.block_size,(241,79,80),x,y)
-					self.blocks.add(block)
+	def create_obstacle(self, x_start, y_start, offset_x):
+		block = obstacle.Block(self.block_size, x_start + offset_x, y_start)  # Usamos la clase Block para crear el obstáculo
+		self.blocks.add(block)
 
-	def create_multiple_obstacles(self,*offset,x_start,y_start):
+	def create_multiple_obstacles(self, *offset, x_start, y_start):
 		for offset_x in offset:
-			self.create_obstacle(x_start,y_start,offset_x)
+			self.create_obstacle(x_start, y_start, offset_x)
 
 	def alien_setup(self,rows,cols,x_distance = 60,y_distance = 48,x_offset = 70, y_offset = 100):
 		for row_index, row in enumerate(range(rows)):
