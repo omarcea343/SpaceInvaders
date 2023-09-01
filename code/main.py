@@ -7,7 +7,8 @@ from laser import Laser
 import pygame_menu
 
 class Game:
-	def __init__(self):
+	def __init__(self, screen):
+		self.screen = screen
 		# Player setup
 		player_sprite = Player((screen_width / 2,screen_height),screen_width,5)
 		self.player = pygame.sprite.GroupSingle(player_sprite)
@@ -174,56 +175,63 @@ class Game:
 		self.display_score()
 		self.victory_message()
 
-# Función para iniciar el juego
-def start_game():
-    pygame.mixer.Sound('../audio/music.wav').play(loops=-1)
-    game = Game()
-    ALIENLASER = pygame.USEREVENT + 1
-    pygame.time.set_timer(ALIENLASER, 800)
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == ALIENLASER:
-                game.alien_shoot()
+class MenuManager:
+    def __init__(self, screen):
+        self.screen = screen
+        self.menu = self.create_menu()
+        self.running = True
 
-        screen.fill((30, 30, 30))
-        game.run()
-        pygame.display.flip()
-        clock.tick(60)
+    def create_menu(self):
+        menu = pygame_menu.Menu("Space Invaders", screen_width, screen_height, theme=pygame_menu.themes.THEME_DARK)
+        menu.add.button("Start", self.start_game)
+        menu.add.button("Credits", self.show_credits)
+        menu.add.button("Exit", self.exit_game)
+        return menu
+
+    def start_game(self):
+        self.menu.disable()
+        pygame.mixer.Sound('../audio/music.wav').play(loops=-1)
+        game = Game(self.screen)
+        ALIENLASER = pygame.USEREVENT + 1
+        pygame.time.set_timer(ALIENLASER, 800)
+        while self.running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == ALIENLASER:
+                    game.alien_shoot()
+
+            self.screen.fill((30, 30, 30))
+            game.run()
+            pygame.display.flip()
+            clock.tick(60)
+        
+        self.menu.enable()
+
+    def show_credits(self):
+        credits_menu = CreditsMenu(self)
+        self.menu.disable()
+        credits_menu.mainloop(screen)
+        self.menu.enable()
+
+    def exit_game(self):
+        pygame.quit()
+        sys.exit()
 
 class CreditsMenu(pygame_menu.Menu):
-    def __init__(self):
+    def __init__(self, menu_manager):
         super().__init__("Credits", screen_width, screen_height, theme=pygame_menu.themes.THEME_DARK)
+        self.menu_manager = menu_manager
         
         self.add.label("Credits:", font_size=40, font_color=(255, 255, 255))
         self.add.label("Omar", font_size=30, font_color=(255, 255, 255))
         self.add.vertical_margin(50)
         self.add.button("Back to Menu", self.back_to_menu)
-    
+
     def back_to_menu(self):
         self.disable()
-        menu.enable()
-
-def show_credits():
-    credits_menu = CreditsMenu()
-    menu.disable()
-    credits_menu.mainloop(screen)
-    menu.enable()
-
-menu = None  # Define la variable del menú global
-
-def create_menu():
-    global menu  # Indica que estás utilizando la variable global menu
-    
-    menu = pygame_menu.Menu("Space Invaders", screen_width, screen_height, theme=pygame_menu.themes.THEME_DARK)
-    
-    menu.add.button("Start", start_game)
-    menu.add.button("Credits", show_credits)
-    menu.add.button("Exit", pygame_menu.events.EXIT)
-    
-    return menu
+        self.menu_manager.menu.enable()
 
 if __name__ == '__main__':
     pygame.init()
@@ -232,8 +240,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((screen_width, screen_height))
     clock = pygame.time.Clock()
 
-    # Crear el menú
-    menu = create_menu()
+    menu_manager = MenuManager(screen)
 
     while True:
         for event in pygame.event.get():
@@ -242,11 +249,9 @@ if __name__ == '__main__':
                 sys.exit()
 
         screen.fill((30, 30, 30))
-        menu.update(pygame.event.get())
-        menu.draw(screen)
-        
-        # Agregamos el procesamiento del menú
-        menu.mainloop(screen, disable_loop=True)
+        menu_manager.menu.update(pygame.event.get())
+        menu_manager.menu.draw(screen)
+        menu_manager.menu.mainloop(screen, disable_loop=True)
 
         pygame.display.flip()
         clock.tick(60)
